@@ -1,0 +1,579 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="content-type" content="no-cache, must-revalidate" />
+    <meta http-equiv="expires" content="Wed, 26 Feb 1997 08:21:57 GMT"/>
+    <title>跟团信息</title>
+
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/nav.css">
+    <link rel="stylesheet" href="../css/font-awesome.css">
+    <link href="../css/quill.snow.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/element/index.css">
+
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+		.table th, .table td {
+			text-align: center !important;
+			vertical-align: middle !important;
+		}
+    </style>
+</head>
+<body>
+<div id="wrapper" v-cloak>
+    <!--导航栏-->
+    <div class="menuW" style="float: left">
+        <div class="sideMenu">
+            <div class="head">旅游景点展示网站</div>
+            <ul>
+                <li class="nLi">
+                    <h3><i class="fa fa-dashboard"></i>首页<span class="fa fa-angle-up arrow"></span></h3>
+                    <ul class="sub">
+                        <li><a href="index.html"><i class="fa fa-dashboard"></i>首页</a></li>
+                    </ul>
+                </li>
+                <li class="nLi on">
+                    <h3><i class="fa fa fa-dashboard icon"></i>信息展示<span class="fa fa-angle-up arrow"></span>
+                    </h3>
+                    <ul class="sub">
+						<li v-if="authority.indexOf(1) != -1">
+							<a href="adminInfo.html"><i class="fa fa-table"></i>管理员信息</a>
+						</li>
+						<li v-if="authority.indexOf(2) != -1">
+							<a href="lvyouluxianInfo.html"><i class="fa fa-table"></i>旅游路线</a>
+						</li>
+						<li v-if="authority.indexOf(4) != -1">
+							<a href="mapInfo.html"><i class="fa fa-table"></i>地图查询</a>
+						</li>
+						<li v-if="authority.indexOf(5) != -1">
+							<a href="jiudianyudingInfo.html"><i class="fa fa-table"></i>酒店预订</a>
+						</li>
+						<li v-if="authority.indexOf(6) != -1">
+							<a href="jingdianjieshaoInfo.html"><i class="fa fa-table"></i>景点介绍</a>
+						</li>
+						<li v-if="authority.indexOf(7) != -1">
+							<a href="messageInfo.html"><i class="fa fa-table"></i>留言信息</a>
+						</li>
+
+						<li v-if="authority.indexOf(9) != -1">
+							<a href="userInfo.html"><i class="fa fa-table"></i>用户信息</a>
+						</li>
+						<li v-if="authority.indexOf(1000001) != -1">
+							<a href="advertiserInfo.html"><i class="fa fa-table"></i>新闻发布</a>
+						</li>
+						<li v-if="authority.indexOf(1000009) != -1">
+							<a href="typeInfo.html"><i class="fa fa-table"></i>景点类别</a>
+						</li>
+						<li v-if="authority.indexOf(1000010) != -1">
+							<a href="goodsInfo.html"><i class="fa fa-table"></i>景点详情</a>
+						</li>
+                        <li v-if="user.level === 1">
+                            <a href="gentuanInfo.html" class="active"><i class="fa fa-table"></i>跟团信息</a>
+                        </li>
+                        <li v-if="user.level === 1">
+                            <a href="gtOrderInfo.html"><i class="fa fa-table"></i>跟团订单</a>
+                        </li>
+						<li v-if="authority.indexOf(1000012) != -1">
+							<a href="orderInfo.html"><i class="fa fa-table"></i>订单信息</a>
+						</li>
+						<li v-if="authority.indexOf(1000013) != -1">
+							<a href="commentInfo.html"><i class="fa fa-table"></i>评价信息</a>
+						</li>
+
+                        <li>
+                            <a href="javascript:void(0)" @click="personalPage"><i class="fa fa-user"></i>个人信息</a>
+                        </li>
+                    </ul>
+                </li>
+				<li class="nLi">
+					<h3><i class="fa fa-table"></i>旅游路线<span class="fa fa-angle-up arrow"></span></h3>
+					<ul class="sub">
+						<li>
+							<a href="lvyouluxianInfoComment.html"><i class="fa fa-unlock-alt"></i>旅游路线评论</a>
+						</li>
+					</ul>
+				</li>
+				<li class="nLi">
+					<h3><i class="fa fa-table"></i>酒店预订<span class="fa fa-angle-up arrow"></span></h3>
+					<ul class="sub">
+						<li>
+							<a href="jiudianyudingInfoComment.html"><i class="fa fa-unlock-alt"></i>酒店预订评论</a>
+						</li>
+					</ul>
+				</li>
+				<li class="nLi">
+					<h3><i class="fa fa-table"></i>景点介绍<span class="fa fa-angle-up arrow"></span></h3>
+					<ul class="sub">
+						<li>
+							<a href="jingdianjieshaoInfoComment.html"><i class="fa fa-unlock-alt"></i>景点介绍评论</a>
+						</li>
+					</ul>
+				</li>
+
+                <li class="nLi">
+                    <h3><i class="fa fa-unlock-alt"></i>修改密码<span class="fa fa-angle-up arrow"></span></h3>
+                    <ul class="sub">
+                        <li>
+                            <a href="updatePassword.html"><i class="fa fa-unlock-alt"></i>修改密码</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nLi">
+                    <h3><i class="fa fa-power-off"></i>退出登录<span class="fa fa-angle-up arrow"></span></h3>
+                    <ul class="sub">
+                        <li>
+                            <a href="javascript:void(0)" @click="logout"><i class="fa fa-power-off"></i>退出登录</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- 主体 -->
+    <div class="main">
+        <!-- 头部开始 -->
+        <div class="main-head" style="width: 100%; display: flex">
+            <div style="flex: 1; text-align: left">
+                <a href="/front/index.html">返回前台首页</a>
+            </div>
+            <div style="flex: 1; text-align: right">
+                <a href="javascript:void(0)" @click="personalPage"><span>您好，<span style="color: #8470FF">{{user.name}}</span></span></a>
+                <a href="javascript:void(0)" @click="logout" style="padding:0 10px;">退出登录</a>
+            </div>
+        </div>
+        <!-- 头部结束 -->
+
+        <!-- 主体开始 -->
+        <div style="padding: 0 20px">
+            <div>
+                <div class="table-title">跟团游信息</div>
+            </div>
+
+            <!-- 表格主体-->
+            <div style="margin-top: 10px">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">跟团游信息表</div>
+                            <div class="panel-body">
+                                <div class="table-responsive">
+                                    <div class="nx-table-header">
+                                        <button class="btn btn-sm btn-primary" @click="add()">新增</button>
+                                    </div>
+                                    <table class="table table-striped table-bordered table-hover" style="margin-top: 10px">
+                                        <thead>
+                                        <tr>
+
+                                            <th>图片</th>
+                                            <th>名称</th>
+                                            <th>价格</th>
+                                            <th>天数</th>
+                                            <th>总人数</th>
+                                            <th>已跟团</th>
+                                            <th>导游</th>
+                                            <th>交通方式</th>
+                                            <th>线路标签</th>
+                                            <th>出发时间</th>
+                                            <th>操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody v-for="obj in objs">
+                                        <tr>
+                                            <td>
+                                                <img @click="viewModal(obj)" :src='obj.imgSrc' style="width: 50px; height: 50px">
+                                            </td>
+                                            <td>{{obj.name}}</td>
+                                            <td>{{obj.price}}</td>
+                                            <td>{{obj.day}}</td>
+                                            <td>{{obj.num}} 人</td>
+                                            <td>{{obj.gentuan}} 人</td>
+                                            <td>{{obj.daoyou}}</td>
+                                            <td>{{obj.jiaotong}}</td>
+                                            <td>{{obj.tag}}</td>
+                                            <td>{{obj.time}}</td>
+                                            <td>
+                                                <button class="btn btn-primary btn-xs" @click="init(obj)">编辑</button>
+                                                <button class="btn btn-info btn-xs" @click="edit(obj)">行程</button>
+                                                <button class="btn btn-danger btn-xs" @click="del(obj)">删除</button>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <nav aria-label="Page navigation example">
+                                        <ul class="pagination">
+                                            <li class="page-item" :class="{ disabled: preActive }">
+                                                <a class="page-link" href="javascript:void(0)"
+                                                   @click="loadTable(pageInfo.pageNum - 1)">上一页</a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="javascript:void(0)" v-if="pageInfo.pageNum > 1" @click="loadTable(pageInfo.pageNum - 1)">{{pageInfo.pageNum - 1}}</a>
+                                            </li>
+                                            <li class="page-item disabled">
+                                                <a class="page-link" aria-disabled="true" href="javascript:void(0)">{{pageInfo.pageNum}}</a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="javascript:void(0)" v-if="pageInfo.hasNextPage" @click="loadTable(pageInfo.pageNum + 1)">{{pageInfo.pageNum + 1}}</a>
+                                            </li>
+                                            <li class="page-item" :class="{ disabled: nextActive }">
+                                                <a class="page-link" href="javascript:void(0)" @click="loadTable(pageInfo.hasNextPage? (pageInfo.pageNum + 1) : pageInfo.pageNum)">下一页</a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 表格主体结束-->
+        </div>
+        <!-- 主体结束 -->
+    </div>
+    <!-- 模态框（Modal） -->
+    <div class="modal" tabindex="-1" role="dialog" id="goodsModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title">请填写信息</span>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="entity={}">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <input type="hidden" name="id" v-model="entity.id">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">名称</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" v-model="entity.name" placeholder="请输入名称">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">价格</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" v-model="entity.price" placeholder="请输入景点价格">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">天数</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" v-model="entity.day" placeholder="请输入天数">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">人数</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" v-model="entity.num" placeholder="请输入人数">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">导游</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" v-model="entity.daoyou" placeholder="请输入导游">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">交通方式</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" v-model="entity.jiaotong" placeholder="请输入交通方式">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">线路标签</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" v-model="entity.tag" placeholder="请输入线路标签">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">出发时间</label>
+                            <div class="col-sm-7">
+                                <div class="block">
+                                    <el-date-picker v-model="entity.time" id="time" type="datetime" clearable value-format="yyyy-MM-dd HH:mm:ss" placeholder="选择日期时间"></el-date-picker>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">上传图片</label>
+                            <div class="col-sm-7">
+                                <div style="margin-top: 8px">
+                                    <input @change="upload" @click="clearFile" multiple="multiple" type="file" ref="file">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="entity={}">关闭</button>
+                    <button type="button" class="btn btn-primary" @click="update()">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    酒店预览
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="cancel">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div id="view-img" class="modal-body" style="text-align: center">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="editModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" id="closeBtn" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                行程介绍
+            </div>
+            <div class="modal-body">
+                <div id="editor" style="min-height: 300px"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="cancelBtn">取消</button>
+                <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../js/jquery-1.10.2.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/nav.js"></script>
+<script src="../js/my.js"></script>
+<script src="../js/vue2.6.11/vue.min.js"></script>
+<script src="../js/vue2.6.11/axios.js"></script>
+<script src="../js/quill.js"></script>
+<script src="../js/element/index.js"></script>
+
+<script>
+    function msg(type, msg) {
+        Vue.prototype.$message({
+            type: type, // success（成功）、warning（警告）, error(错误)
+            message: msg,
+            duration: 2000,
+            offset: 100,
+            center: true
+        })
+    }
+
+    let quill = new Quill('#editor', {
+        theme: 'snow',
+        modules: {
+            toolbar: {
+                container: [
+                    [{'header': [1, 2, 3, 4, 5, 6, false]}],        // 标题字体
+                    [{'font': []}],                                 // 字体
+                    ['bold', 'italic', 'underline', 'strike'],        // 切换按钮
+                    [{'align': []}],                                // 对齐方式
+                    ['blockquote', 'code-block'],                     // 文本块/代码块
+                    [{'header': 1}, {'header': 2}],               // 用户自定义按钮值
+                    [{'list': 'ordered'}, {'list': 'bullet'}],     // 有序/无序列表
+                    [{'indent': '-1'}, {'indent': '+1'}],          // 减少缩进/缩进
+                    [{'color': []}, {'background': []}],          // 主题默认下拉，使用主题提供的值
+                    ['clean'],                                        // 清除格式
+                    ['image', 'link', 'video']                        // 图片 / 链接 / 视频
+                ]
+            }
+        }
+    });
+
+    let wrapper = new Vue({
+        el: '#wrapper',
+        data: {
+            authority: [],
+            typeObjs: [],
+            user: {},
+            name: '',
+
+            objs: [],
+            pageInfo: {},
+            preActive: true,
+            nextActive: true,
+            entity: {}
+        },
+        created: function () {
+            this.user = JSON.parse(localStorage.getItem("user"));
+            axios.get("/authority").then(res => {
+                if (res.data.code === '0') {
+                    this.authority = res.data.data;
+                } else {
+                    msg('error', res.data.msg);
+                }
+            });
+            this.loadTable(1);
+
+            this.entity.typeId = 0;
+            axios.get("/typeInfo").then(res => {
+                this.typeObjs = res.data.data;
+            });
+
+        },
+        methods: {
+            loadTable(pageNum) {
+                let name = this.name === '' ? "all" : this.name;
+                axios.get("/gentuanInfo/page/" + name + "?pageNum=" + pageNum).then(res => {
+                    if (res.data.code === '0') {
+                        let objs = res.data.data.list;
+                        objs.forEach(item => {
+                            item.imgSrc = '/files/download/' + JSON.parse(item.fileIds)[0];
+                        });
+                        this.objs = objs;
+                        this.pageInfo = res.data.data;
+                        this.preActive = !(this.pageInfo.hasPreviousPage);
+                        this.nextActive = !(this.pageInfo.hasNextPage);
+                    } else {
+                        msg('error', res.data.msg);
+                    }
+                });
+            },
+            init(o) {
+                if (this.user.level === 3) {
+                    msg('warning', '没有该权限操作');
+                    return;
+                }
+                this.entity = JSON.parse(JSON.stringify(o));
+                $('#goodsModal').modal('show');
+            },
+            add() {
+                if (this.user.level === 3) {
+                    msg('warning', '没有该权限操作');
+                    return;
+                }
+                this.entity = {};
+                $('#goodsModal').modal('show');
+            },
+            edit(o) {
+                this.entity = JSON.parse(JSON.stringify(o));
+                quill.root.innerHTML = o.description;
+                $('#editModal').modal('show');
+            },
+            update() {
+                if (checkValid(this.entity)) {
+                    this.entity.level = this.user.level;
+                    if (!this.entity.id) {
+                        axios.post("/gentuanInfo", this.entity).then(res => {
+                            if (res.data.code === '0') {
+                                msg('success', '添加成功');
+                                $('#goodsModal').modal('hide');
+                                this.loadTable(1);
+                            } else {
+                                msg('error', res.data.msg);
+                            }
+                        })
+                    } else {
+                        axios.put("/gentuanInfo", this.entity).then(res => {
+                            if (res.data.code === '0') {
+                                msg('success', '操作成功');
+                                $('#goodsModal').modal('hide');
+                                this.loadTable(1);
+                            } else {
+                                msg('error', res.data.msg);
+                            }
+                        })
+                    }
+                }
+            },
+            del(o) {
+                if (this.user.level === 3) {
+                    msg('warning', '没有该权限操作');
+                    return;
+                }
+                let _this = this;
+                this.$confirm('确认删除？', '系统提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    cancelButtonClass: 'btn-custom-cancel',
+                    type: 'warning'
+                }).then(function(){
+                    axios.delete("/gentuanInfo/" + o.id).then(res => {
+                        if (res.data.code === '0') {
+                            msg('success', '删除成功');
+                            _this.loadTable(1);
+                        } else {
+                            msg('error', res.data.msg);
+                        }
+                    });
+                }).catch(function() {
+                    console.log("取消成功！");
+                });
+            },
+            upload: function () {
+                let files = this.$refs.file.files;
+                for (let i = 0; i < files.length; i++) {
+                    let formData = new FormData();
+                    formData.append('file', files[i]);
+                    axios.post('/files/upload', formData, {
+                        'Content-Type': 'multipart/form-data'
+                    }).then(res => {
+                        if (res.data.code === '0') {
+                            msg('success','文件上传成功');
+                            this.entity.fileList.push(res.data.data.id);
+                        } else {
+                            msg('error', res.data.msg);
+                        }
+                    })
+                }
+            },
+            clearFile: function() {
+                this.entity.fileList = [];
+            },
+            viewModal: function (data) {
+                axios.get("/gentuanInfo/" + data.id).then(res => {
+                    if (res.data.code === '0') {
+                        let fileIds = JSON.parse(res.data.data.fileIds);
+                        $("#view-img").empty();
+                        fileIds.forEach(item => {
+                            $("#view-img").append($(`<img id="img-id" src="/files/download/${item}" style="width: 400px; margin-bottom: 5px" alt="">`));
+                        });
+                        $("#myModal").modal('show');
+                    } else {
+                        msg('error', res.data.msg);
+                    }
+                });
+            },
+            cancel: function () {
+            },
+            logout() {
+                logout();
+            }
+        }
+    });
+    $('#saveBtn').click(function () {
+        let entity = wrapper.$data.entity;
+        entity.description = quill.root.innerHTML;
+        axios.put("/gentuanInfo", entity).then(res => {
+            if (res.data.code === '0') {
+                msg('success', '更新行程成功');
+                wrapper.loadTable(1);
+            } else {
+                msg('error', res.data.msg);
+            }
+        });
+        $('#editModal').modal('hide');
+    });
+
+    $('#cancelBtn').click(function () {
+        $('#editModal').modal('hide');
+    });
+
+    $('#closeBtn').click(function () {
+        $('#editModal').modal('hide');
+    })
+</script>
+</body>
+</html>

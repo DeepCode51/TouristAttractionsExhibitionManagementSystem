@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="pragma" content="no-cache"/>
+    <meta http-equiv="content-type" content="no-cache, must-revalidate"/>
+    <meta http-equiv="expires" content="Wed, 26 Feb 1997 08:21:57 GMT"/>
+    <title>地图查询</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/my.css">
+    <link rel="stylesheet" href="css/nav.css">
+
+</head>
+<body>
+<div id="wrapper">
+    <!-- 头部开始 -->
+    <div style="width: 100%; height: 30px; line-height: 30px; background-color: black">
+        <div class="container">
+            <div class="col-md-6" style="text-align: left">
+                <a href="/end/page/login.html" style="color: white; margin-right: 20px" >登录</a>
+                <a href="/end/page/register.html" style="color: white">注册</a>
+            </div>
+            <div class="col-md-6" style="color: yellow; text-align: right">
+                <span v-if="user.name">
+                    欢迎您，{{user.name}}
+                    <a style="color: white" href="javascript:void(0)" @click="logout">退出</a>
+
+                </span>
+            </div>
+        </div>
+        <hr>
+    </div>
+    <div style="margin: 0px 20px">
+        <div style="width: 100%; height: 80px;border-bottom: 1px solid #ccc">
+            <div class="col-md-3" style="height: 80px; display: flex; justify-content: left;align-items: center;
+                     font-size: 28px;">
+                <a style="color: red;" href="/front/index.html">顶峰旅行社信息管理系统</a>
+            </div>
+            <div class="col-md-9">
+                <div class="row" style="height: 80px; line-height: 80px">
+                    <ul style="display: flex;">
+                        <li class="nav-item"><a href="index.html">首页</a></li>
+                        <li class="nav-item"><a href="advertiserInfo.html">新闻发布</a></li>
+                        <li class="nav-item"><a href="lvyouluxianInfo.html">旅游路线</a></li>
+                        <li class="nav-item"><a href="mapInfo.html" class="nav-item-active">地图查询</a></li>
+                        <li class="nav-item"><a href="jiudianyudingInfo.html">酒店预订</a></li>
+                        <li class="nav-item"><a href="jingdianjieshaoInfo.html">景点介绍</a></li>
+                        <li class="nav-item"><a href="messageInfo.html">留言信息</a></li>
+                        <li class="nav-item"><a href="cartInfo.html">购物车/跟团</a></li>
+                        <li class="nav-item"><a href="orderInfo.html">订单信息</a></li>
+                        <li class="nav-item"><a href="commentInfo.html">评价信息</a></li>
+
+                        <li class="nav-item"><a href="javascript:void(0)" @click="personalPage">个人信息</a></li>
+                        <li class="nav-item" v-if="isShow"><a href="/end/page/index.html">进入后台</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 头部结束 -->
+</div>
+<div class="container"  style="margin-top: 20px">
+    <div class="col-md-12" style="margin-top: 20px; margin-bottom: 20px; text-align: center">
+        <span style="margin-right: 20px; color: red">搜索地点：</span>
+        <input type="text" style="margin-right: 10px; width: 100px" placeholder="请输入地点" id="station">
+        <input type="button" id="location" value="查询"/>
+    </div>
+    <div class="col-md-12" style="margin-top: 20px; margin-bottom: 20px; text-align: center">
+        <span style="margin-right: 20px; color: red">搜索驾车路线：</span>
+        起点：<input type="text" style="margin-right: 10px; width: 100px" placeholder="请输入起点" id="start">
+        终点：<input type="text" style="margin-right: 10px; width: 100px" placeholder="请输入终点" id="end">
+        <span id="driving_way">
+				<select>
+					<option value="0">最少时间</option>
+					<option value="1">最短距离</option>
+					<option value="2">避开高速</option>
+				</select>
+			</span>
+        <input type="button" id="route" value="查询"/>
+    </div>
+<!--    <div class="col-md-12" style="margin-top: 20px; margin-bottom: 20px; text-align: center">-->
+<!--        <span style="margin-right: 20px; color: red">搜索步行路线：</span>-->
+<!--        起点：<input type="text" style="margin-right: 10px; width: 100px" placeholder="请输入起点" id="start-1">-->
+<!--        终点：<input type="text" style="margin-right: 10px; width: 100px" placeholder="请输入终点" id="end-1">-->
+<!--        <input type="button" id="path" value="查询"/>-->
+<!--    </div>-->
+    <div style="width: 800px; height: 500px; margin: 100px auto" id="allmap"></div>
+</div>
+
+<script src="js/jquery-1.10.2.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/vue2.6.11/axios.js"></script>
+<script src="js/vue2.6.11/vue.min.js"></script>
+<script src="js/my.js"></script>
+
+<script type="text/javascript">
+    var map;
+    !function(mapInit) {
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = "http://api.map.baidu.com/api?v=2.0&ak=1oulcORPlbRWngGxo0XjZrOj1SOWp6Ml&callback=mapinit";
+        window['mapinit'] = function() {
+            mapInit();
+        };
+        document.head.appendChild(script);
+
+    }(function() {
+
+        // 百度地图API功能
+        map = new BMap.Map("allmap");  // 创建Map实例
+        var point = new BMap.Point(116.331398,39.897445);
+        if (map) {
+            map.centerAndZoom(point,12);
+            var geolocation = new BMap.Geolocation();
+            geolocation.getCurrentPosition(function(r){
+                if(this.getStatus() == BMAP_STATUS_SUCCESS){
+                    var mk = new BMap.Marker(r.point);
+                    map.addOverlay(mk);
+                    map.panTo(r.point);
+                    // alert('您的位置：'+r.point.lng+','+r.point.lat);
+                }
+                else {
+                    alert('failed'+this.getStatus());
+                }
+            },{enableHighAccuracy: true})
+
+            map.enableScrollWheelZoom(true);
+
+            map.addControl(new BMap.CityListControl({
+                anchor: BMAP_ANCHOR_TOP_LEFT
+            }));
+        }
+
+    });
+
+    $('#location').click(function() {
+        var local = $("#station").val();
+        new BMap.LocalSearch(map, {
+            renderOptions:{map: map}
+        }).search(local);
+    });
+
+    $("#route").click(function(){
+        //三种驾车策略：最少时间，最短距离，避开高速
+        var routePolicy = [BMAP_DRIVING_POLICY_LEAST_TIME,BMAP_DRIVING_POLICY_LEAST_DISTANCE,BMAP_DRIVING_POLICY_AVOID_HIGHWAYS];
+        var start = $("#start").val();
+        var end = $("#end").val();
+        map.clearOverlays();
+        var i = $("#driving_way select").val();
+        search(start,end,routePolicy[i]);
+        function search(start,end,route){
+            var driving = new BMap.DrivingRoute(map, {renderOptions:{map: map, autoViewport: true},policy: route});
+            driving.search(start,end);
+        }
+    });
+
+    $("#path").click(function(){
+        var myP1 = $("#start-1").val();
+        var myP2 = $("#end-1").val();
+        var myIcon = new BMap.Icon("/front/img/mali.png", new BMap.Size(30, 30), {    //小人图片
+            //offset: new BMap.Size(0, -5),    //相当于CSS精灵
+            imageOffset: new BMap.Size(0, 0)    //图片的偏移量。为了是图片底部中心对准坐标点。
+        });
+
+        var driving2 = new BMap.WalkingRoute(map, {renderOptions:{map: map, autoViewport: true}});    //驾车实例
+        driving2.search(myP1, myP2);    //显示一条步行线路
+        map.clearOverlays();
+        window.run = function (){
+            var driving = new BMap.WalkingRoute(map);    //步行实例
+            driving.search(myP1, myP2);
+            driving.setSearchCompleteCallback(function(){
+                var pts = driving.getResults().getPlan(0).getRoute(0).getPath();    //通过步行实例，获得一系列点的数组
+                var paths = pts.length;    //获得有几个点
+
+                var carMk = new BMap.Marker(pts[0],{icon:myIcon});
+                map.addOverlay(carMk);
+                i = 0;
+                function resetMkPoint(i){
+                    carMk.setPosition(pts[i]);
+                    if(i < paths){
+                        setTimeout(function(){
+                            i++;
+                            resetMkPoint(i);
+                        },100);
+                    }
+                }
+                setTimeout(function(){
+                    resetMkPoint(5);
+                },100)
+
+            });
+        }
+
+        setTimeout(function(){
+            run();
+        },1500);
+
+    });
+
+    new Vue({
+        el: '#wrapper',
+        data: {
+            isCollect: false,
+            user: {},
+            isShow: false
+        },
+        created: function () {
+            axios.get('/auth').then(res => {
+                if (res.data.code === '0') {
+                    this.user = res.data.data;
+                    if (this.user.level !== 3) {
+                        this.isShow = true;
+                    }
+                }
+            });
+        },
+        methods: {
+            logout() {
+                axios.get("/logout").then(res => {
+                    if(res.data.code === '0') {
+                        location.href = '/front/index.html';
+                    } else {
+                        msg('error', res.data.msg);
+                    }
+                })
+            }
+        }
+    })
+
+</script>
+</body>
+</html>
